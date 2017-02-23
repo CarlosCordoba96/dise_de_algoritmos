@@ -6,7 +6,7 @@ import javax.script.ScriptException;
 
 public class biseccion {
 
-	public static void main(String [] args) throws ScriptException{
+	public static void main(String [] args) {
 		double result;
 		double error=10e-4;
 		System.out.println(2>=error);
@@ -14,7 +14,7 @@ public class biseccion {
 		System.out.println(recurbisec(0,1,error));
 	}
 
-	static double recurbisec(double a,double b,double error) throws ScriptException{
+	static double recurbisec(double a,double b,double error) {
 		double valormedio=(a+b)/2;
 		double sol=0;
 		double fa = eval(a);
@@ -38,7 +38,7 @@ public class biseccion {
 
 
 
-	static double eval(double x) throws ScriptException{
+	static double eval(double x){
 
 		return Math.pow(x, 3)+x-1;//x^3+x-1
 

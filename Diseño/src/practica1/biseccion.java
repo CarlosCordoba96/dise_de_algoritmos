@@ -20,14 +20,14 @@ public class biseccion {
 		double fa = eval(a);
 		double fb = eval(b);
 		double fc=eval(valormedio);
-		if( Math.abs(fc) <= error){
+		if( Math.abs(fc) <= error){//solución encontrada
 			sol=valormedio;
 		}else{
 
-			if(fc * fa > 0){//es menor que 0
+			if(fc * fa > 0){//es mayor que 0
 				sol=recurbisec(valormedio,b,error);
 
-			}else {
+			}else {//es menor que 0
 				sol=recurbisec(a,valormedio,error);
 			}	
 		}
@@ -40,7 +40,7 @@ public class biseccion {
 
 	static double eval(double x) throws ScriptException{
 
-		return Math.pow(x, 3)+x-1;
+		return Math.pow(x, 3)+x-1;//x^3+x-1
 
 	}
 

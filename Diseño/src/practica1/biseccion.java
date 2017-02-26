@@ -24,7 +24,7 @@ public class biseccion {
 			sol=valormedio;
 		}else{
 
-			if(fc * fa > 0){//es mayor que 0
+			if(fc * fa > 0){//es mayor que 0,
 				sol=recurbisec(valormedio,b,error);
 
 			}else {//es menor que 0

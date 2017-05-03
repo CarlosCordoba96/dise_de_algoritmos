@@ -2,26 +2,55 @@ package textos;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Random;
+import java.util.Scanner;
 
 public class Textos {
 
     public static void main(String[]args) throws FileNotFoundException, IOException{
+            int porcentaje = 0;
+            int lineas_totales;
+            int lineas_espacio;
+            int linea = 0;
+            
             System.out.println("Hola");
-            ArrayList<Integer> ocurrencias=BoyerMoore("a",muestraContenido("quijoteCap1.txt"));
+            Scanner s = new Scanner (System.in);
+            lineas_totales = numerodelineas("quijoteCap1.txt");
+            System.out.println("De un total de " + lineas_totales + " líneas.");
+            System.out.println("Introduzca el porcentaje de texto que desea");
+            porcentaje = s.nextInt();
+
+            lineas_espacio = (lineas_totales * porcentaje)/100;
+
+            ArrayList<Integer> ocurrencias=BoyerMoore("a",muestraContenido("quijoteCap1.txt", lineas_espacio));
             System.out.println(ocurrencias.size()+" Ocurrencias");
 
     }
-    static String muestraContenido(String archivo) throws FileNotFoundException, IOException {
+    static String muestraContenido(String archivo, int lineas_espacio) throws FileNotFoundException, IOException {
           String cadena;
           String texto = "";
           FileReader f = new FileReader(archivo);
           BufferedReader b = new BufferedReader(f);
+          
+          Random r = new Random();
+          int cont_linea = 0;
+          int linea = r.nextInt(lineas_espacio);
+          int lineas_contadas = 0;
+          
           while((cadena = b.readLine())!=null) {
-           // System.out.println(cadena);
-           
-            texto=texto+"\n"+cadena;
+              if (cont_linea == linea) {
+                  System.out.println(cadena);
+                  texto=texto+"\n"+cadena;
+                  lineas_contadas++;
+              }
+              if (cont_linea == lineas_espacio) {
+                  linea = r.nextInt(lineas_espacio);
+                  cont_linea = 0;              
+              }
+              cont_linea++;
           }
-          //System.out.println(texto);
+          System.out.println("Líneas contadas totales: " + lineas_contadas);
+          System.out.println(texto);
 
           b.close();
           return texto;
@@ -39,6 +68,7 @@ public class Textos {
           b.close();
           return acum;
     }
+    
     public static ArrayList<Integer> BoyerMoore(String patron,String texto){
             ArrayList<Integer> ocurrencias=new ArrayList<Integer>();
             if(patron.length()>0 && texto.length()>=patron.length()){

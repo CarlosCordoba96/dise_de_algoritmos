@@ -52,6 +52,7 @@ public class Textos {
               }
               cont_linea++;
           }
+          
           System.out.println("Líneas contadas totales: " + lineas_contadas);
           System.out.println(texto);
 

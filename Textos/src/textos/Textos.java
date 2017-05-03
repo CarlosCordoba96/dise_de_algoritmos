@@ -21,12 +21,15 @@ public class Textos {
             porcentaje = s.nextInt();
 
             lineas_espacio = (lineas_totales * porcentaje)/100;
+           //System.out.println("Res porcentaje: " + lineas_espacio);
+            int lineas_intervalo = lineas_totales/lineas_espacio;
+            //System.out.println("Lineas intervalo" + lineas_intervalo);
 
-            ArrayList<Integer> ocurrencias=BoyerMoore("a",muestraContenido("quijoteCap1.txt", lineas_espacio));
+            ArrayList<Integer> ocurrencias=BoyerMoore("a",muestraContenido("quijoteCap1.txt", lineas_intervalo));
             System.out.println(ocurrencias.size()+" Ocurrencias");
 
     }
-    static String muestraContenido(String archivo, int lineas_espacio) throws FileNotFoundException, IOException {
+    static String muestraContenido(String archivo, int leer) throws FileNotFoundException, IOException {
           String cadena;
           String texto = "";
           FileReader f = new FileReader(archivo);
@@ -34,17 +37,17 @@ public class Textos {
           
           Random r = new Random();
           int cont_linea = 0;
-          int linea = r.nextInt(lineas_espacio);
+          int linea = r.nextInt(leer) + 1;
           int lineas_contadas = 0;
           
           while((cadena = b.readLine())!=null) {
               if (cont_linea == linea) {
-                  System.out.println(cadena);
+                 // System.out.println(cadena);
                   texto=texto+"\n"+cadena;
                   lineas_contadas++;
               }
-              if (cont_linea == lineas_espacio) {
-                  linea = r.nextInt(lineas_espacio);
+              if (cont_linea == leer) {
+                  linea = r.nextInt(leer) + 1;
                   cont_linea = 0;              
               }
               cont_linea++;

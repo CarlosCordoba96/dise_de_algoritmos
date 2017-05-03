@@ -18,6 +18,7 @@ public class Textos {
           BufferedReader b = new BufferedReader(f);
           while((cadena = b.readLine())!=null) {
            // System.out.println(cadena);
+           
             texto=texto+"\n"+cadena;
           }
           //System.out.println(texto);

@@ -8,7 +8,7 @@ public class BoyerMoore {
 	public static void main(String[]args) throws FileNotFoundException, IOException{
 		System.out.println("Hola");
 		ArrayList<Integer> ocurrencias=BoyerMoore("a",muestraContenido("quijoteCap1.txt"));
-		System.out.println(ocurrencias.size());
+		System.out.println(ocurrencias.size()+" Ocurrencias");
 		
 	}
 	static String muestraContenido(String archivo) throws FileNotFoundException, IOException {
@@ -24,6 +24,18 @@ public class BoyerMoore {
 
 	      b.close();
 	      return texto;
+	}
+	static int numerodelineas(String archivo) throws IOException{
+		int acum=0;
+		 String cadena;
+		FileReader f = new FileReader(archivo);
+	      BufferedReader b = new BufferedReader(f);
+	      while((cadena = b.readLine())!=null) {
+	       acum++;
+	      }
+
+	      b.close();
+	      return acum;
 	}
 	public static ArrayList<Integer> BoyerMoore(String patron,String texto){
 		ArrayList<Integer> ocurrencias=new ArrayList<Integer>();
@@ -57,7 +69,7 @@ public class BoyerMoore {
 		}
 	}
 	private static void preproceso2(int[] s,int[] f,String patron){
-		//Sólo una parte de la coincidencia del sufijo se produce en el comienzo del patrón
+		//Sï¿½lo una parte de la coincidencia del sufijo se produce en el comienzo del patrï¿½n
 		int i, j;
 		j=f[0];
 		for(i=0; i<=patron.length(); i++) {
@@ -67,7 +79,7 @@ public class BoyerMoore {
 	}
 
 	private static void preproceso1(int[] s,int[] f,String patron){
-		//El sufijo coincidente se produce en algún lugar dentro del patrón
+		//El sufijo coincidente se produce en algï¿½n lugar dentro del patrï¿½n
 		int i=patron.length(), j=i+1;
 		f[i]=j;
 		while(i>0){
@@ -82,7 +94,7 @@ public class BoyerMoore {
 
 	private static void iniciaOcc(ArrayList<Character> occChar,ArrayList<Integer>occPos,String patron){
 		//Badcharacter
-		//hace la funcionoccocc("patrona",a)=6 occ("patrona",n)=5 la ‘a’ de pos 1 no se cuenta //solo la mas lejana
+		//hace la funcionoccocc("patrona",a)=6 occ("patrona",n)=5 la ï¿½aï¿½ de pos 1 no se cuenta //solo la mas lejana
 		for(int n=patron.length()-1;n>=0;n--)
 			if(!occChar.contains(patron.charAt(n))){
 				occChar.add(patron.charAt(n));

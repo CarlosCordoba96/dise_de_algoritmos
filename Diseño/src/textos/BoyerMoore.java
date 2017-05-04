@@ -20,12 +20,13 @@ public class BoyerMoore {
 		porcentaje = s.nextInt();
 		lineas_espacio = (lineas_totales * porcentaje)/100;
 		int lineas_intervalo = lineas_totales/lineas_espacio;
+		String texto=muestraContenido("quijoteCap1.txt", lineas_intervalo);
 		System.out.println("METODO BOYER-MOORE:");
-		ArrayList<Integer> ocurrencias=BoyerMoore(patron,muestraContenido("quijoteCap1.txt", lineas_intervalo));
+		ArrayList<Integer> ocurrencias=BoyerMoore(patron,texto);
 		System.out.println("Se estiman: "+(ocurrencias.size()*100)/porcentaje+" ocurrencias del patron: '"+patron+"'");
 		System.out.println("##############################################################################");
 		System.out.println("Metodo KarpRabin");
-		ocurrencias=KarpRabin(patron,muestraContenido("quijoteCap1.txt", lineas_intervalo));
+		ocurrencias=KarpRabin(patron,texto);
 		System.out.println("Se estiman: "+(ocurrencias.size()*100)/porcentaje+" ocurrencias del patron: '"+patron+"'");
 
 	}

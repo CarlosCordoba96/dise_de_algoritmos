@@ -1,7 +1,9 @@
 package textos;
 
 import java.io.*;
-import java.util.ArrayList;
+
+import java.util.*;
+import java.util.LinkedList;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -20,7 +22,9 @@ public class BoyerMoore {
 		porcentaje = s.nextInt();
 		lineas_espacio = (lineas_totales * porcentaje)/100;
 		int lineas_intervalo = lineas_totales/lineas_espacio;
-		String texto=muestraContenido("quijoteCap1.txt", lineas_intervalo);
+		LinkedList<Integer> lista=luis(lineas_totales,10,3);
+		Collections.sort(lista);
+		String texto=muestraContenido("quijoteCap1.txt",lista);
 		System.out.println("METODO BOYER-MOORE:");
 		ArrayList<Integer> ocurrencias=BoyerMoore(patron,texto);
 		System.out.println("Se estiman: "+(ocurrencias.size()*100)/porcentaje+" ocurrencias del patron: '"+patron+"'");
@@ -28,35 +32,63 @@ public class BoyerMoore {
 		System.out.println("Metodo KarpRabin");
 		ocurrencias=KarpRabin(patron,texto);
 		System.out.println("Se estiman: "+(ocurrencias.size()*100)/porcentaje+" ocurrencias del patron: '"+patron+"'");
+		
+		
 
 	}
-	static String muestraContenido(String archivo, int leer) throws FileNotFoundException, IOException {
+	
+	static String muestraContenido(String archivo, LinkedList<Integer> lista) throws FileNotFoundException, IOException {
 		String cadena;
 		String texto = "";
+		System.out.println(lista);
 		FileReader f = new FileReader(archivo);
 		BufferedReader b = new BufferedReader(f);
-
-		Random r = new Random();
-		int cont_linea = 0;
-		int linea = r.nextInt(leer) + 1;
-		int lineas_contadas = 0;
-
+		int i=0;
+		int count=0;
 		while((cadena = b.readLine())!=null) {
-			if (cont_linea == linea) {
-				// System.out.println(cadena);
-				texto=texto+"\n"+cadena;
-				lineas_contadas++;
+			if(count<lista.size()&&i==lista.get(count)){
+				texto+="\n"+cadena;
+				count++;
+				
 			}
-			if (cont_linea == leer) {
-				linea = r.nextInt(leer) + 1;
-				cont_linea = 0;              
-			}
-			cont_linea++;
+			i++;			
 		}
-
 		b.close();
 		return texto;
 	}
+	
+	static LinkedList luis(int lineas,int segmentos,int repeticiones){
+		int aleatorio=0;
+		LinkedList<Integer> list=new LinkedList();
+		int segmento=(int)lineas/segmentos;
+		for(int i=0;i<segmentos;i++){
+			int inicio=i*segmento;
+			int fin=i*segmento+segmento;
+			for(int j=0;j<repeticiones;j++){
+				do {
+					aleatorio=generaNumeroAleatorio(inicio,fin);
+				}while(buscarlinea(list,aleatorio));
+				list.add(aleatorio);
+			}
+		}
+		
+		return list;
+	}
+	
+	public static int generaNumeroAleatorio(int minimo,int maximo) {
+		return ((int)Math.floor(Math.random()*(maximo-minimo+1)+(minimo)));
+	}
+	
+	public static boolean buscarlinea(LinkedList<Integer> lista,int linea) {
+		boolean encontrado=false;
+		for (int i=0;i<lista.size() && !encontrado;i++)  {
+			if (lista.get(i)==linea)
+				encontrado=true;
+		}
+		return encontrado;
+	}
+	
+	
 
 	static int numerodelineas(String archivo) throws IOException{
 		int acum=0;
@@ -68,6 +100,7 @@ public class BoyerMoore {
 		}
 
 		b.close();
+		System.out.println(acum);
 		return acum;
 	}
 

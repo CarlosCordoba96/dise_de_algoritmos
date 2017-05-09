@@ -21,8 +21,9 @@ public class BoyerMoore {
 		System.out.println("Introduzca el porcentaje de texto que desea");
 		porcentaje = s.nextInt();
 		lineas_espacio = (lineas_totales * porcentaje)/100;
+		
 		int lineas_intervalo = lineas_totales/lineas_espacio;
-		LinkedList<Integer> lista=luis(lineas_totales,10,3);
+		LinkedList<Integer> lista=luis(lineas_espacio,10,3);
 		Collections.sort(lista);
 		String texto=muestraContenido("quijoteCap1.txt",lista);
 		System.out.println("METODO BOYER-MOORE:");
@@ -48,8 +49,7 @@ public class BoyerMoore {
 		while((cadena = b.readLine())!=null) {
 			if(count<lista.size()&&i==lista.get(count)){
 				texto+="\n"+cadena;
-				count++;
-				
+				count++;			
 			}
 			i++;			
 		}

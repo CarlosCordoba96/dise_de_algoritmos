@@ -1,42 +1,109 @@
 package textos;
 
 import java.io.*;
-import java.util.ArrayList;
+
+import java.util.*;
+import java.util.LinkedList;
+import java.util.Random;
+import java.util.Scanner;
 
 public class BoyerMoore {
 
 	public static void main(String[]args) throws FileNotFoundException, IOException{
-		System.out.println("Hola");
-		ArrayList<Integer> ocurrencias=BoyerMoore("a",muestraContenido("quijoteCap1.txt"));
-		System.out.println(ocurrencias.size()+" Ocurrencias");
+		int porcentaje = 0;
+		int lineas_totales;
+		int lineas_espacio;
+		int linea = 0;
+		Scanner s = new Scanner (System.in);
+		lineas_totales = numerodelineas("quijoteCap1.txt");
+		System.out.println("Que patrón desea buscar en el texto: ");
+		String patron=s.next();
+		System.out.println("Introduzca el porcentaje de texto que desea");
+		porcentaje = s.nextInt();
+		lineas_espacio = (lineas_totales * porcentaje)/100;
 		
-	}
-	static String muestraContenido(String archivo) throws FileNotFoundException, IOException {
-	      String cadena;
-	      String texto = "";
-	      FileReader f = new FileReader(archivo);
-	      BufferedReader b = new BufferedReader(f);
-	      while((cadena = b.readLine())!=null) {
-	       // System.out.println(cadena);
-	        texto=texto+"\n"+cadena;
-	      }
-	      //System.out.println(texto);
+		int lineas_intervalo = lineas_totales/lineas_espacio;
+		LinkedList<Integer> lista=luis(lineas_espacio,10,3);
+		Collections.sort(lista);
+		String texto=muestraContenido("quijoteCap1.txt",lista);
+		System.out.println("METODO BOYER-MOORE:");
+		ArrayList<Integer> ocurrencias=BoyerMoore(patron,texto);
+		System.out.println("Se estiman: "+(ocurrencias.size()*100)/porcentaje+" ocurrencias del patron: '"+patron+"'");
+		System.out.println("##############################################################################");
+		System.out.println("Metodo KarpRabin");
+		ocurrencias=KarpRabin(patron,texto);
+		System.out.println("Se estiman: "+(ocurrencias.size()*100)/porcentaje+" ocurrencias del patron: '"+patron+"'");
+		
+		
 
-	      b.close();
-	      return texto;
 	}
+	
+	static String muestraContenido(String archivo, LinkedList<Integer> lista) throws FileNotFoundException, IOException {
+		String cadena;
+		String texto = "";
+		System.out.println(lista);
+		FileReader f = new FileReader(archivo);
+		BufferedReader b = new BufferedReader(f);
+		int i=0;
+		int count=0;
+		while((cadena = b.readLine())!=null) {
+			if(count<lista.size()&&i==lista.get(count)){
+				texto+="\n"+cadena;
+				count++;			
+			}
+			i++;			
+		}
+		b.close();
+		return texto;
+	}
+	
+	static LinkedList luis(int lineas,int segmentos,int repeticiones){
+		int aleatorio=0;
+		LinkedList<Integer> list=new LinkedList();
+		int segmento=(int)lineas/segmentos;
+		for(int i=0;i<segmentos;i++){
+			int inicio=i*segmento;
+			int fin=i*segmento+segmento;
+			for(int j=0;j<repeticiones;j++){
+				do {
+					aleatorio=generaNumeroAleatorio(inicio,fin);
+				}while(buscarlinea(list,aleatorio));
+				list.add(aleatorio);
+			}
+		}
+		
+		return list;
+	}
+	
+	public static int generaNumeroAleatorio(int minimo,int maximo) {
+		return ((int)Math.floor(Math.random()*(maximo-minimo+1)+(minimo)));
+	}
+	
+	public static boolean buscarlinea(LinkedList<Integer> lista,int linea) {
+		boolean encontrado=false;
+		for (int i=0;i<lista.size() && !encontrado;i++)  {
+			if (lista.get(i)==linea)
+				encontrado=true;
+		}
+		return encontrado;
+	}
+	
+	
+
 	static int numerodelineas(String archivo) throws IOException{
 		int acum=0;
-		 String cadena;
+		String cadena;
 		FileReader f = new FileReader(archivo);
-	      BufferedReader b = new BufferedReader(f);
-	      while((cadena = b.readLine())!=null) {
-	       acum++;
-	      }
+		BufferedReader b = new BufferedReader(f);
+		while((cadena = b.readLine())!=null) {
+			acum++;
+		}
 
-	      b.close();
-	      return acum;
+		b.close();
+		System.out.println(acum);
+		return acum;
 	}
+
 	public static ArrayList<Integer> BoyerMoore(String patron,String texto){
 		ArrayList<Integer> ocurrencias=new ArrayList<Integer>();
 		if(patron.length()>0 && texto.length()>=patron.length()){
@@ -52,6 +119,7 @@ public class BoyerMoore {
 		}
 		return ocurrencias;
 	}
+
 	private static void boyerMoore(String patron,String texto,int[] s,ArrayList<Integer> ocurrencias,ArrayList<Character> occChar,ArrayList<Integer> occPos){
 		int i=0, j;
 		while(i<=texto.length()-patron.length()) {
@@ -68,6 +136,7 @@ public class BoyerMoore {
 			}
 		}
 	}
+
 	private static void preproceso2(int[] s,int[] f,String patron){
 		//S�lo una parte de la coincidencia del sufijo se produce en el comienzo del patr�n
 		int i, j;
@@ -101,4 +170,22 @@ public class BoyerMoore {
 				occPos.add(n);
 			}
 	}
+	public static ArrayList<Integer> KarpRabin(String patron,String texto){
+		ArrayList<Integer> ocurrencias=new ArrayList<Integer>();
+		if(patron.length()>0 && texto.length()>=patron.length()){
+			KarpRabin(patron,texto,ocurrencias);
+		}
+		return ocurrencias;
+	}
+	private static void KarpRabin(String patron,String texto,ArrayList<Integer> ocurrencias){
+		int m=patron.length();
+		for(int n=0;n<=texto.length()-m;n++){
+			String aux=texto.substring(n, n+m);
+			if (aux.hashCode()==patron.hashCode() && aux.equals(patron)) ocurrencias.add(n);
+		}
+	}
+
+
+
+
 }

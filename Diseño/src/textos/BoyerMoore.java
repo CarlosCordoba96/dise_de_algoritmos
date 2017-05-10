@@ -21,27 +21,27 @@ public class BoyerMoore {
 		System.out.println("Introduzca el porcentaje de texto que desea");
 		porcentaje = s.nextInt();
 		lineas_espacio = (lineas_totales * porcentaje)/100;
-		
-		int lineas_intervalo = lineas_totales/lineas_espacio;
-		LinkedList<Integer> lista=luis(lineas_espacio,10,3);
+
+		int  n_segmentos = 100/porcentaje;
+		//int lineas_intervalo = lineas_totales/lineas_espacio;
+		int repeticiones = lineas_espacio/n_segmentos;
+
+		LinkedList<Integer> lista = lineasaleatorias(lineas_totales, n_segmentos, repeticiones);
 		Collections.sort(lista);
-		String texto=muestraContenido("quijoteCap1.txt",lista);
+		if (n_segmentos >= 2) 
+			System.out.println("Se leen un total de " + lista.size() + " líneas de texto, se leen " + lista.size()/n_segmentos + " cada " + lineas_espacio);
+
+		String texto = muestraContenido("quijoteCap1.txt",lista);
 		System.out.println("METODO BOYER-MOORE:");
-		ArrayList<Integer> ocurrencias=BoyerMoore(patron,texto);
+		ArrayList<Integer> ocurrencias = BoyerMoore(patron,texto);
 		System.out.println("Se estiman: "+(ocurrencias.size()*100)/porcentaje+" ocurrencias del patron: '"+patron+"'");
-		System.out.println("##############################################################################");
-		System.out.println("Metodo KarpRabin");
-		ocurrencias=KarpRabin(patron,texto);
-		System.out.println("Se estiman: "+(ocurrencias.size()*100)/porcentaje+" ocurrencias del patron: '"+patron+"'");
-		
-		
+
 
 	}
-	
+
 	static String muestraContenido(String archivo, LinkedList<Integer> lista) throws FileNotFoundException, IOException {
 		String cadena;
 		String texto = "";
-		System.out.println(lista);
 		FileReader f = new FileReader(archivo);
 		BufferedReader b = new BufferedReader(f);
 		int i=0;
@@ -56,29 +56,29 @@ public class BoyerMoore {
 		b.close();
 		return texto;
 	}
-	
-	static LinkedList luis(int lineas,int segmentos,int repeticiones){
+
+	static LinkedList lineasaleatorias(int lineas,int n_segmentos,int repeticiones){
 		int aleatorio=0;
-		LinkedList<Integer> list=new LinkedList();
-		int segmento=(int)lineas/segmentos;
-		for(int i=0;i<segmentos;i++){
-			int inicio=i*segmento;
-			int fin=i*segmento+segmento;
-			for(int j=0;j<repeticiones;j++){
+		LinkedList<Integer> list = new LinkedList();
+		int segmento = (int)lineas/n_segmentos;
+		for(int i=0; i < n_segmentos; i++){
+			int inicio = i * segmento;
+			int fin = i * segmento + segmento;
+			for(int j=0; j < repeticiones; j++){
 				do {
-					aleatorio=generaNumeroAleatorio(inicio,fin);
+					aleatorio = generaNumeroAleatorio(inicio,fin);
 				}while(buscarlinea(list,aleatorio));
 				list.add(aleatorio);
 			}
 		}
-		
+
 		return list;
 	}
-	
+
 	public static int generaNumeroAleatorio(int minimo,int maximo) {
 		return ((int)Math.floor(Math.random()*(maximo-minimo+1)+(minimo)));
 	}
-	
+
 	public static boolean buscarlinea(LinkedList<Integer> lista,int linea) {
 		boolean encontrado=false;
 		for (int i=0;i<lista.size() && !encontrado;i++)  {
@@ -87,8 +87,8 @@ public class BoyerMoore {
 		}
 		return encontrado;
 	}
-	
-	
+
+
 
 	static int numerodelineas(String archivo) throws IOException{
 		int acum=0;
@@ -100,7 +100,6 @@ public class BoyerMoore {
 		}
 
 		b.close();
-		System.out.println(acum);
 		return acum;
 	}
 
@@ -170,22 +169,6 @@ public class BoyerMoore {
 				occPos.add(n);
 			}
 	}
-	public static ArrayList<Integer> KarpRabin(String patron,String texto){
-		ArrayList<Integer> ocurrencias=new ArrayList<Integer>();
-		if(patron.length()>0 && texto.length()>=patron.length()){
-			KarpRabin(patron,texto,ocurrencias);
-		}
-		return ocurrencias;
-	}
-	private static void KarpRabin(String patron,String texto,ArrayList<Integer> ocurrencias){
-		int m=patron.length();
-		for(int n=0;n<=texto.length()-m;n++){
-			String aux=texto.substring(n, n+m);
-			if (aux.hashCode()==patron.hashCode() && aux.equals(patron)) ocurrencias.add(n);
-		}
-	}
-
-
 
 
 }

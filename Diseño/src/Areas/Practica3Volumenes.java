@@ -1,9 +1,9 @@
-package Volumen;
+package Areas;
 
 import java.util.Random;
 import java.util.Scanner;
 
-public class Practica3 {
+public class Practica3Volumenes {
 
     /**
      * @param args the command line arguments
